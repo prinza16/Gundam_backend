@@ -1,5 +1,4 @@
 from django.urls import path
-from .views import Grade
 from .views import GradeListCreateAPIView, GradeRetrieveUpdateDestroyAPIView
 
 urlpatterns = [
