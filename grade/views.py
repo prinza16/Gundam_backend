@@ -8,11 +8,11 @@ class SetPaginationGrade(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'limit'
     max_page_size = 100
-    page_query_param = 'page' 
 
 class GradeListCreateAPIView(generics.ListCreateAPIView):
     queryset = Grade.objects.filter(is_active=1)
     serializer_class = GradeSerializer
+    pagination_class = SetPaginationGrade
 
 class GradeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Grade.objects.all()

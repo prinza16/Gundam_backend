@@ -23,5 +23,5 @@ urlpatterns = [
     path('universe/', include('universe.urls')),
     path('seires/', include('series.urls')),
     path('pilot/', include('pilot.urls')),
-    path('gundam/', include('gundam.urls')),
+    path('gundam_data/', include('gundam_data.urls')),
 ]

@@ -8,7 +8,7 @@ class UniverseListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = UniverseSerializer
 
 class UniverseRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Universe.objects.filter(is_active=1)
+    queryset = Universe.objects.all()
     serializer_class = UniverseSerializer
     lookup_field = 'universe_id'
 
