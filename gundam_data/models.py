@@ -4,7 +4,7 @@ from universe.models import Universe
 from series.models import Series
 from pilot.models import Pilot
 
-class Types(models.Model):
+class Types(models.Model): #ชนิดของโมเดล เช่น "Mobile Suit", "Mobile Armor", "Mobile Fighter", "Support Unit"
     types_id = models.AutoField(db_column='types_id', primary_key=True)
     types_name = models.CharField(db_column='types_name', max_length=200, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -15,7 +15,7 @@ class Types(models.Model):
         managed = True
         db_table = 'types'
 
-class Vendor(models.Model):
+class Vendor(models.Model): #ผู้ผลิต โมเดล
     vendor_id = models.AutoField(db_column='vendor_id', primary_key=True)
     vendor_name = models.CharField(db_column='vendor_name', max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -29,8 +29,9 @@ class Vendor(models.Model):
 class ModelData(models.Model):
     model_id = models.AutoField(db_column='model_id', primary_key=True)
     model_name = models.CharField(db_column='model_name', max_length=100, blank=True, null=True)
-    model_image = models.ImageField(db_column='model_image', upload_to='model_images/', blank=True, null=True)
     model_grade = models.ForeignKey(Grade, db_column='model_grade', on_delete=models.SET_NULL, null=True, blank=True)
+    model_type = models.ForeignKey(Types, db_column='model_type', on_delete=models.SET_NULL, null=True, blank=True)
+    model_vendor = models.ForeignKey(Vendor, db_column='model_vendor', on_delete=models.SET_NULL, null=True, blank=True)
     model_initial = models.CharField(db_column='model_initial', max_length=100, blank=True, null=True)
     model_length = models.DecimalField(db_column='model_length', max_digits=10, decimal_places=2, null=True, blank=True)
     model_width = models.DecimalField(db_column='model_width', max_digits=10, decimal_places=2, null=True, blank=True)
@@ -69,3 +70,15 @@ class ModelUniverseOccurrence(models.Model):
         unique_together = ('model', 'universe')
         managed = True
         db_table = 'model_universe_occurrence'
+
+class ModelImage(models.Model):
+    model_data = models.ForeignKey(ModelData, on_delete=models.CASCADE, db_column='model_id', related_name='images')
+    image = models.ImageField(upload_to='model_photos/', blank=True, null=True)
+    is_main = models.BooleanField(default=False)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'model_image'
+        ordering = ['is_main', '-create_date']
+        managed = True
