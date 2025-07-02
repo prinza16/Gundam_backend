@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('grade/', include('grade.urls')),
     path('universe/', include('universe.urls')),
-    path('seires/', include('series.urls')),
+    path('series/', include('series.urls')),
     path('pilot/', include('pilot.urls')),
     path('gundam_data/', include('gundam_data.urls')),
 ]
