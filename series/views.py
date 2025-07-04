@@ -19,7 +19,7 @@ class SeriesListCreateAPIView(generics.ListCreateAPIView):
     search_fields = ['series_name']
 
 class SeriesRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Series.objects.filter()
+    queryset = Series.objects.filter(is_active=1)
     serializer_class = SeriesSerializer
     lookup_field = 'series_id'
 

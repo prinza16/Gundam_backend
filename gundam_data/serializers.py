@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Types, Vendor, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelUniverseOccurrence
+from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelUniverseOccurrence
 from grade.models import Grade
 from universe.models import Universe
 from series.models import Series
@@ -11,9 +11,9 @@ class TypesSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('create_date', 'update_date',)
 
-class VendorSerializer(serializers.ModelSerializer):
+class SellerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Vendor
+        model = Seller
         fields = '__all__'
         read_only_fields = ('create_date', 'update_date',)
 
