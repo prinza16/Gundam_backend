@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Series
 from .serializers import SeriesSerializer
 
@@ -22,6 +23,7 @@ class SeriesRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Series.objects.filter(is_active=1)
     serializer_class = SeriesSerializer
     lookup_field = 'series_id'
+    parser_classes = [MultiPartParser, FormParser]
 
     def perform_destroy(self, instance):
         if instance.is_active:

@@ -2,10 +2,10 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
-from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelUniverseOccurrence
-from .serializers import TypesSerializer, SellerSerializer, ModelDataSerializer, ModelPilotAssignmentSerializer, ModelSeriesOccurrenceSerializer, ModelUniverseOccurrenceSerializer
+from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence
+from .serializers import TypesSerializer, SellerSerializer, ModelDataSerializer, ModelPilotAssignmentSerializer, ModelSeriesOccurrenceSerializer
 
-class SetPaginationSeries(PageNumberPagination):
+class StandardPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'limit'
     max_page_size = 100
@@ -13,7 +13,7 @@ class SetPaginationSeries(PageNumberPagination):
 class TypesListCreateAPIView(generics.ListCreateAPIView):
     queryset = Types.objects.filter(is_active = 1).order_by('types_id')
     serializer_class = TypesSerializer
-    pagination_class = SetPaginationSeries
+    pagination_class = StandardPagination
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['types_name']
@@ -33,14 +33,14 @@ class TypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 class SellerListCreateAPIView(generics.ListCreateAPIView):
     queryset = Seller.objects.filter(is_active = 1).order_by('seller_id')
     serializer_class = SellerSerializer
-    pagination_class = SetPaginationSeries
+    pagination_class = StandardPagination
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['seller_name']
 
 class SellerRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Seller.objects.filter(is_active=1)
-    serializer_class = TypesSerializer
+    serializer_class = SellerSerializer
     lookup_field = 'seller_id'
 
     def perform_destroy(self, instance):
@@ -62,8 +62,5 @@ class ModelSeriesOccurrenceListCreateAPIView(generics.ListCreateAPIView):
     queryset = ModelSeriesOccurrence.objects.all()
     serializer_class = ModelSeriesOccurrenceSerializer
 
-class ModelUniverseOccurrenceListCreateAPIView(generics.ListCreateAPIView):
-    queryset = ModelUniverseOccurrence.objects.all()
-    serializer_class = ModelUniverseOccurrenceSerializer
 
 

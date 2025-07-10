@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelUniverseOccurrence
+from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelImage
 from grade.models import Grade
 from universe.models import Universe
 from series.models import Series
@@ -19,23 +19,43 @@ class SellerSerializer(serializers.ModelSerializer):
 
 class ModelDataSerializer(serializers.ModelSerializer):
     model_grade_name = serializers.CharField(source='model_grade.grade_name', read_only=True)
+    main_image = serializers.SerializerMethodField()
+    release_date = serializers.SerializerMethodField()
+
     class Meta:
         model = ModelData
         fields = [
             'model_id',
             'model_name',
-            'model_image',
             'model_grade',
             'model_grade_name',
             'model_initial',
+            'release_date',
             'model_length',
             'model_width',
             'model_height',
+            'main_image',
             'is_active',
             'create_date',
             'update_date',
         ]
         read_only_fields = ('create_date', 'update_date',)
+
+    def get_main_image(self, obj):
+        main_img = obj.images.filter(is_main=True).first()
+        if main_img:
+            return main_img.image.url
+        return None
+
+    def get_release_date(self, obj):
+        if obj.model_initial:
+            return obj.model_initial.strftime('%Y-%m')
+        return None
+
+class ModelImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelImage
+        fields = ['image', 'is_main']
 
 class ModelPilotAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,9 +65,4 @@ class ModelPilotAssignmentSerializer(serializers.ModelSerializer):
 class ModelSeriesOccurrenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModelSeriesOccurrence
-        fields = '__all__'
-
-class ModelUniverseOccurrenceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModelUniverseOccurrence
         fields = '__all__'

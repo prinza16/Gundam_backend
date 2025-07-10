@@ -8,8 +8,7 @@ class PilotSerializer(serializers.ModelSerializer):
         fields = [
             'pilot_id',
             'pilot_name',
-            'pilot_image',
-            'pilot_vehicle',
+            'pilot_images',
             'pilot_universe',
             'pilot_universe_name',
             'is_active',
