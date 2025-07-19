@@ -19,6 +19,8 @@ class SellerSerializer(serializers.ModelSerializer):
 
 class ModelDataSerializer(serializers.ModelSerializer):
     model_grade_name = serializers.CharField(source='model_grade.grade_name', read_only=True)
+    model_seller_name = serializers.CharField(source='model_seller.seller_name', read_only=True)
+    model_type_name = serializers.CharField(source='model_type.types_name', read_only=True)
     main_image = serializers.SerializerMethodField()
     release_date = serializers.SerializerMethodField()
 
@@ -29,6 +31,10 @@ class ModelDataSerializer(serializers.ModelSerializer):
             'model_name',
             'model_grade',
             'model_grade_name',
+            'model_seller',
+            'model_seller_name',
+            'model_type',
+            'model_type_name',
             'model_initial',
             'release_date',
             'model_length',

@@ -51,8 +51,24 @@ class SellerRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             pass
 
 class ModelDataListCreateAPIView(generics.ListCreateAPIView):
-    queryset = ModelData.objects.all()
+    queryset = ModelData.objects.filter(is_active = 1).order_by('model_id')
     serializer_class = ModelDataSerializer
+    pagination_class = StandardPagination
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['model_name']
+
+class ModelDataRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ModelData.objects.filter(is_active = 1)
+    serializer_class = ModelDataSerializer
+    lookup_field = 'model_id'
+
+    def perform_destroy(self, instance):
+        if instance.is_active:
+            instance.is_active = 0
+            instance.save()
+        else: 
+            pass
 
 class ModelPilotAssignmentListCreateAPIView(generics.ListCreateAPIView):
     queryset = ModelPilotAssignment.objects.all()

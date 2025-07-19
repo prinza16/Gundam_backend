@@ -27,7 +27,7 @@ class Seller(models.Model): #ผู้ผลิต โมเดล
     update_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = True
+        managed = True 
         db_table = 'seller'
     
     def __str__(self):
@@ -36,13 +36,13 @@ class Seller(models.Model): #ผู้ผลิต โมเดล
 class ModelData(models.Model):
     model_id = models.AutoField(db_column='model_id', primary_key=True)
     model_name = models.CharField(db_column='model_name', max_length=100)
-    model_grade = models.ForeignKey(Grade, db_column='model_grade', on_delete=models.SET_NULL, null=True, blank=True)
-    model_type = models.ForeignKey(Types, db_column='model_type', on_delete=models.SET_NULL, null=True, blank=True)
-    model_seller = models.ForeignKey(Seller, db_column='model_seller', on_delete=models.SET_NULL, null=True, blank=True)
+    model_grade = models.ForeignKey(Grade, db_column='model_grade', on_delete=models.SET_NULL, null=True, blank=True, related_name='model_in_grade')
+    model_type = models.ForeignKey(Types, db_column='model_type', on_delete=models.SET_NULL, null=True, blank=True, related_name='model_in_type')
+    model_seller = models.ForeignKey(Seller, db_column='model_seller', on_delete=models.SET_NULL, null=True, blank=True, related_name='model_in_seller')
     model_initial = models.DateField(db_column='model_initial', blank=True, null=True)
-    model_length = models.DecimalField(db_column='model_length', max_digits=10, decimal_places=2, null=True, blank=True)
-    model_width = models.DecimalField(db_column='model_width', max_digits=10, decimal_places=2, null=True, blank=True)
-    model_height = models.DecimalField(db_column='model_height', max_digits=10, decimal_places=2, null=True, blank=True)
+    model_length = models.CharField(db_column='model_length', max_length=50, null=True, blank=True)
+    model_width = models.CharField(db_column='model_width', max_length=50, null=True, blank=True)
+    model_height = models.CharField(db_column='model_height', max_length=50, null=True, blank=True)
     pilots = models.ManyToManyField(Pilot, db_column='model_pilots', through='ModelPilotAssignment', related_name='models_piloted')
     is_active = models.BooleanField(default=True)
     create_date = models.DateTimeField(auto_now_add=True)
