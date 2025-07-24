@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
-from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence
-from .serializers import TypesSerializer, SellerSerializer, ModelDataSerializer, ModelPilotAssignmentSerializer, ModelSeriesOccurrenceSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import Types, Seller, ModelData, ModelPilotAssignment, ModelSeriesOccurrence, ModelImage
+from .serializers import TypesSerializer, SellerSerializer, ModelDataSerializer, ModelPilotAssignmentSerializer, ModelSeriesOccurrenceSerializer, ModelImageSerializer
 
 class StandardPagination(PageNumberPagination):
     page_size = 10
@@ -69,6 +70,11 @@ class ModelDataRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIVie
             instance.save()
         else: 
             pass
+
+class ModelImageListCreateAPIView(generics.ListCreateAPIView):
+    queryset = ModelImage.objects.all()
+    serializer_class = ModelImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
 class ModelPilotAssignmentListCreateAPIView(generics.ListCreateAPIView):
     queryset = ModelPilotAssignment.objects.all()

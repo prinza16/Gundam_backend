@@ -17,12 +17,25 @@ class SellerSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('create_date', 'update_date',)
 
+class ModelImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = ModelImage
+        fields = ['id', 'image', 'is_main', 'model_data']
+
+    def create(self, validated_data):
+        if validated_data.get("is_main"):
+            ModelImage.objects.filter(model_data=validated["model_data"], is_main=True).update(is_main=False)
+        return super().create(validated_data)
+
 class ModelDataSerializer(serializers.ModelSerializer):
     model_grade_name = serializers.CharField(source='model_grade.grade_name', read_only=True)
     model_seller_name = serializers.CharField(source='model_seller.seller_name', read_only=True)
     model_type_name = serializers.CharField(source='model_type.types_name', read_only=True)
     main_image = serializers.SerializerMethodField()
     release_date = serializers.SerializerMethodField()
+    images = ModelImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = ModelData
@@ -41,6 +54,7 @@ class ModelDataSerializer(serializers.ModelSerializer):
             'model_width',
             'model_height',
             'main_image',
+            'images',
             'is_active',
             'create_date',
             'update_date',
@@ -57,11 +71,6 @@ class ModelDataSerializer(serializers.ModelSerializer):
         if obj.model_initial:
             return obj.model_initial.strftime('%Y-%m')
         return None
-
-class ModelImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModelImage
-        fields = ['image', 'is_main']
 
 class ModelPilotAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
